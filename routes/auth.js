@@ -2,6 +2,7 @@
     This is the unauthenticated Routes.
 */
 const express = require('express');
+
 const authRoutes = express.Router()
 const {
     handleRegister,

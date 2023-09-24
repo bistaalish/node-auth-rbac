@@ -1,6 +1,8 @@
 const { StatusCodes } = require('http-status-codes');
 const crypto = require('crypto');
-const {User} = require('../models/User');
+const User = require('../models/User');
+const {NotFoundError, UnauthenticatedError} = require('../errors/index');
+const {sendVerificationEmail,sendResetPasswordEmail} = require('../utils/email');
 
 // Handle sign in request.
 const handleLogin = (req,res) => {
