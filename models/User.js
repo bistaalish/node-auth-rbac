@@ -72,4 +72,4 @@ UserSchema.pre('save', async function () {
         return this.verificationToken
     }
     
-module.exports = mongoose.model('Users', UserSchema );%                                          ~/vs/node-auth-passport    fix/models *2 rebase-i !3                          ✔ 
+module.exports = mongoose.model('Users', UserSchema );                                     ~/vs/node-auth-passport    fix/models *2 rebase-i !3                          ✔ 
