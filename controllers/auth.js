@@ -1,4 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
+const crypto = require('crypto');
+const {User} = require('../models/User');
 
 // Handle sign in request.
 const handleLogin = (req,res) => {
@@ -9,10 +11,17 @@ const handleLogin = (req,res) => {
 }
 
 // Handle Sign up request.
-const handleRegister = (req,res) => {
-    res.status(StatusCodes.CREATED).json({
-        "message": "User Registered Successfully"
-    })
+const handleRegister = async (req,res) => {
+    const {name,email,password} = req.body
+    const verificationToken =  crypto.randomBytes(32).toString('hex')
+    const hashedToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
+    const user = await User.create({name,email,password,verificationToken:hashedToken})
+    console.log(verificationToken)
+    await sendVerificationEmail(email,verificationToken)
+    const token = user.createJWT()
+    const response = { user: {name: user.getName()}, token }
+    res.status(StatusCodes.CREATED).json(response)
+
 }
 
 // Handle Resend Email Verification.

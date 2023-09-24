@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const { v4: uuidv4 } = require('uuid');
 
 var Schema = mongoose.Schema;
 
@@ -40,36 +39,36 @@ var UserSchema = new Schema({
 
 // hash password using bcrypt
 UserSchema.pre('save', async function () {
-        const salt = await bcrypt.genSalt(10)
-        this.password = await bcrypt.hash(this.password, salt)
-        this.updatedAt= Date.now
-      })
-    
-    // Create JSON web token
-    UserSchema.methods.createJWT = function () {
-        return jwt.sign(
-            {userId: this._id, name: this.name,isVerified: this.isVerified},
-            process.env.SECRET_KEY,{
-                expiresIn: process.env.JWT_LIFETIME
-            }
-        )
-    }
-    
-    // get Name
-    UserSchema.methods.getName = function () {
-        return this.name
-    }
-    
-    // Compare password
-    UserSchema.methods.comparePassword = async function (pass) {
-        const isMatch = await bcrypt.compare(pass,this.password)
-        console.log(isMatch)
-        return isMatch
-    }
-    
-    // Generate verificationToken
-    UserSchema.methods.getVerificationToken = async function () {
-        return this.verificationToken
-    }
-    
-module.exports = mongoose.model('Users', UserSchema );                                     ~/vs/node-auth-passport    fix/models *2 rebase-i !3                          ✔ 
+    const salt = await bcrypt.genSalt(10)
+    this.password = await bcrypt.hash(this.password, salt)
+    this.updatedAt= Date.now
+  })
+
+// Create JSON web token
+UserSchema.methods.createJWT = function () {
+    return jwt.sign(
+        {userId: this._id, name: this.name,isVerified: this.isVerified},
+        process.env.SECRET_KEY,{
+            expiresIn: process.env.JWT_LIFETIME
+        }
+    )
+}
+
+// get Name
+UserSchema.methods.getName = function () {
+    return this.name
+}
+
+// Compare password
+UserSchema.methods.comparePassword = async function (pass) {
+    const isMatch = await bcrypt.compare(pass,this.password)
+    console.log(isMatch)
+    return isMatch
+}
+
+// Generate verificationToken
+UserSchema.methods.getVerificationToken = async function () {
+    return this.verificationToken
+}
+// Compile model from schema
+module.exports = mongoose.model('Users', UserSchema );
