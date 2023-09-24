@@ -4,8 +4,8 @@
 const express = require('express');
 const authRoutes = express.Router()
 const {
-    handleSignIn,
-    handleSignUp,
+    handleRegister,
+    handleLogin,
     handlePasswordReset,
     handlePasswordResetRequest,
     handleEmailVerification,
@@ -14,8 +14,8 @@ const {
 
 }  = require('../controllers/auth')
 
-authRoutes.post("/signup",handleSignUp)
-authRoutes.post('/signup',handleSignIn)
+authRoutes.post("/login",handleLogin)
+authRoutes.post('/register',handleRegister)
 authRoutes.get("/verify-email/:token",handleEmailVerification)
 authRoutes.post("/resend-verification-email",handleResendEmailVerification)
 authRoutes.post('/reset-password/:token',handlePasswordReset)

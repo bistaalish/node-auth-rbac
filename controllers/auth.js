@@ -1,7 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 
 // Handle sign in request.
-const handleSignIn = (req,res) => {
+const handleLogin = (req,res) => {
   res.status(StatusCodes.OK).json({
     "msg" : "Login successful",
     "token" : "test jwt token"
@@ -9,7 +9,7 @@ const handleSignIn = (req,res) => {
 }
 
 // Handle Sign up request.
-const handleSignUp = (req,res) => {
+const handleRegister = (req,res) => {
     res.status(StatusCodes.CREATED).json({
         "message": "User Registered Successfully"
     })
@@ -68,8 +68,8 @@ const handleUpdateProfile = (req,res) => {
 
 
 module.exports = {
-    handleSignIn,
-    handleSignUp,
+    handleRegister,
+    handleLogin,
     handleEmailVerification,
     handleTokenRefresh,
     handlePasswordResetRequest,
