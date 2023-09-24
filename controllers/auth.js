@@ -15,8 +15,15 @@ const handleSignUp = (req,res) => {
     })
 }
 
-// Handle Token Verification
-const handleTokenVerification = (req,res) => {
+// Handle Resend Email Verification.
+const handleResendEmailVerification = (req,res) => {
+    res.status(StatusCodes.OK).json({
+        "message": "Email Verification Sent"
+    })
+}
+
+// Handle Email Verification
+const handleEmailVerification = (req,res) => {
     res.status(StatusCodes.OK).json({
         "message" : "Token is valid"
     })
@@ -63,9 +70,10 @@ const handleUpdateProfile = (req,res) => {
 module.exports = {
     handleSignIn,
     handleSignUp,
-    handleTokenVerification,
+    handleEmailVerification,
     handleTokenRefresh,
     handlePasswordResetRequest,
     handlePasswordReset,
-    handleGetProfile
+    handleGetProfile,
+    handleResendEmailVerification
 }

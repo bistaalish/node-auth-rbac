@@ -1,7 +1,7 @@
 require('dotenv').config();
 require('express-async-errors');
 const express = require('express');
-
+const authRoutes = require('./routes/auth');
 
 // extra security packages
 const helmet = require('helmet')
@@ -33,6 +33,8 @@ app.use(xss())
 app.get('/', (req, res) => {
   res.send('Express boilerplate is successful');
 });
+
+app.use('/api/auth',authRoutes)
 
 
 
