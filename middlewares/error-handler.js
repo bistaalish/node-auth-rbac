@@ -16,7 +16,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   }
   if(err.code && err.code === 11000 ) {
     CustomError.msg = `Duplicate value entered for ${Object.keys(err.keyValue)} field, please choose another value`
-    CustomError.statusCode = 400    
+    CustomError.statusCode = 409    
   }
   if(err.name === 'CastError'){
     console.log(err.value)
