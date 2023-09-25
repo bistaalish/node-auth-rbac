@@ -51,6 +51,9 @@ const handleEmailVerification = async (req,res) => {
         isVerified: true,
         verificationToken: null
     })
+    if(!user) {
+        throw new NotFoundError("Invalid or expired token")
+    }
     res.status(StatusCodes.OK).json({msg: "Email Verification True"})
 }
 

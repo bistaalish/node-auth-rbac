@@ -17,8 +17,7 @@ const {
 
 authRoutes.post("/login",handleLogin)
 authRoutes.post('/register',handleRegister)
-authRoutes.get("/verify-email/:token",handleEmailVerification)
-authRoutes.post("/resend-verification-email",handleResendEmailVerification)
+authRoutes.get("/verify/:token",handleEmailVerification)
 authRoutes.post('/reset-password/:token',handlePasswordReset)
 authRoutes.get('/reset-password-request',handlePasswordResetRequest)
 
