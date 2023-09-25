@@ -44,10 +44,14 @@ const handleResendEmailVerification = (req,res) => {
 }
 
 // Handle Email Verification
-const handleEmailVerification = (req,res) => {
-    res.status(StatusCodes.OK).json({
-        "message" : "Token is valid"
+const handleEmailVerification = async (req,res) => {
+    const token = req.params.token
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const user = await User.findOneAndUpdate({verificationToken: hashedToken},{
+        isVerified: true,
+        verificationToken: null
     })
+    res.status(StatusCodes.OK).json({msg: "Email Verification True"})
 }
 
 // Handle token Refresh
