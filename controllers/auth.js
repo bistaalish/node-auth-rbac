@@ -169,25 +169,34 @@ const handlePasswordReset = async (req,res) => {
 const handleGetProfile = async  (req,res) => {
     const id = req.user.userId
     const user = await User.findOne({_id:id})
-    const userInfo = {
+    if(!user) {
+        throw new NotFoundError("Invalid User")
+    }
+    res.status(StatusCodes.OK).json({
         id: user._id,
         name: user.name,
         email: user.email,
         phone: user.phone,
         ProfilePicUrl: user.ProfilePicUrl
-    }
-    if(!user) {
-        throw new NotFoundError("Invalid User")
-    }
-    res.status(StatusCodes.OK).json({
-        userInfo
     })   
 }
 
 // handle update profile
-const handleUpdateProfile = (req,res) => {
+const handleUpdateProfile = async (req,res) => {
+    const id = req.user.userId
+    const user = await User.findOneAndUpdate({_id:id},req.body,{
+        new: true,
+        runValidators: true
+    })
     res.status(StatusCodes.OK).json({
-        "message": "Profile updated successfully."
+        "message": "Profile updated successfully.",
+        data: {
+            id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        ProfilePicUrl: user.ProfilePicUrl
+        }
     })
 }
 
@@ -202,5 +211,6 @@ module.exports = {
     handlePasswordReset,
     handleGetProfile,
     handleResendEmailVerification,
-    handleChangePassword
+    handleChangePassword,
+    handleUpdateProfile
 }

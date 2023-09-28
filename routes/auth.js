@@ -13,7 +13,8 @@ const {
     handleResendEmailVerification,
     handleChangePassword,
     handleTokenRefresh,
-    handleGetProfile
+    handleGetProfile,
+    handleUpdateProfile
 
 
 }  = require('../controllers/auth')
@@ -30,6 +31,7 @@ authRoutes.post("/reset-password-request/:token",handlePasswordReset)
 
 // Authorized Routes
 authRoutes.get("/profile",authMiddleware,handleGetProfile)
+authRoutes.patch("/profile",authMiddleware,handleUpdateProfile)
 authRoutes.post("/change-password",authMiddleware,handleChangePassword)
 authRoutes.get("/refresh-token",authMiddleware,handleTokenRefresh)
 
