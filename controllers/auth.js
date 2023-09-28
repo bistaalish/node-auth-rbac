@@ -166,9 +166,21 @@ const handlePasswordReset = async (req,res) => {
 }
 
 // Get Profile
-const handleGetProfile = (req,res) => {
+const handleGetProfile = async  (req,res) => {
+    const id = req.user.userId
+    const user = await User.findOne({_id:id})
+    const userInfo = {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        ProfilePicUrl: user.ProfilePicUrl
+    }
+    if(!user) {
+        throw new NotFoundError("Invalid User")
+    }
     res.status(StatusCodes.OK).json({
-        "email": "test@example.com"
+        userInfo
     })   
 }
 

@@ -35,6 +35,13 @@ var UserSchema = new Schema({
         type: Date,
         default: Date.now,
       },
+      phone: {
+        type: String,
+        match: [/^\d{10}$/,"Please provide valid Phone Number"]
+      },
+      ProfilePicUrl: {
+        type: String
+      }
 });
 
 // hash password using bcrypt
