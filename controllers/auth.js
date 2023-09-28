@@ -98,10 +98,17 @@ const handleChangePassword = async (req,res) =>{
 
 
 // Handle token Refresh
-const handleTokenRefresh = (req,res) => {
+const handleTokenRefresh = async (req,res) => {
+    const id = req.user.userId
+    console.log(id)
+    const user = await User.findOne({_id:id})
+    if(!user){
+        throw new NotFoundError("Invalid User")
+    }
+    const token = user.createJWT()
    res.status(StatusCodes.OK).json({
     "message": "Token refreshed successfully.",
-    "token": "your_new_jwt_token"
+    token
    }) 
 }
 
