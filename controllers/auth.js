@@ -19,7 +19,7 @@ const handleLogin = async (req,res) => {
     }
     const token = user.createJWT()
   res.status(StatusCodes.OK).json({
-    "msg" : "Login successful",
+    "message" : "Login successful",
     token
   });
 }
@@ -73,7 +73,7 @@ const handleEmailVerification = async (req,res) => {
     if(!user) {
         throw new NotFoundError("Invalid or expired token")
     }
-    res.status(StatusCodes.OK).json({msg: "Email Verification True"})
+    res.status(StatusCodes.OK).json({message: "Email Verification True"})
 }
 
 // handle Change password
@@ -94,7 +94,7 @@ const handleChangePassword = async (req,res) =>{
     }
     user.password = newPassword;
     await user.save()
-    res.status(StatusCodes.CREATED).json({msg: "Password Changed Successfully"})
+    res.status(StatusCodes.CREATED).json({message: "Password Changed Successfully"})
 }
 
 
@@ -133,13 +133,13 @@ const handlePasswordResetRequest = async (req,res) => {
             email, token: hashedToken, expires
         })
         await sendResetPasswordEmail(email,resetToken)
-        return res.status(StatusCodes.OK).json({ msg: 'Password reset Email sent.'}) 
+        return res.status(StatusCodes.OK).json({ message: 'Password reset Email sent.'}) 
     }
     passwordReset.token = resetToken
     passwordReset.expires = expires
     await passwordReset.save()
     await sendResetPasswordEmail(email,resetToken)
-    return res.status(StatusCodes.OK).json({msg: 'Password Reset Email'})
+    return res.status(StatusCodes.OK).json({message: 'Password Reset Email'})
         
 }
 
@@ -162,7 +162,7 @@ const handlePasswordReset = async (req,res) => {
     user.password = newPassword
     await user.save()
     await PasswordReset.deleteOne({token:hashedToken})
-    res.status(StatusCodes.OK).json({msg: "Password Reset successful"})
+    res.status(StatusCodes.OK).json({message: "Password Reset successful"})
 }
 
 // Get Profile
@@ -173,11 +173,12 @@ const handleGetProfile = async  (req,res) => {
         throw new NotFoundError("Invalid User")
     }
     res.status(StatusCodes.OK).json({
-        id: user._id,
+        message: "Get User Profile Successful"
+        ,data: {id: user._id,
         name: user.name,
         email: user.email,
         phone: user.phone,
-        ProfilePicUrl: user.ProfilePicUrl
+        ProfilePicUrl: user.ProfilePicUrl }
     })   
 }
 
