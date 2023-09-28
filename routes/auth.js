@@ -24,7 +24,8 @@ authRoutes.get("/verify/:token",handleEmailVerification)
 authRoutes.post('/reset-password/:token',handlePasswordReset)
 authRoutes.get('/reset-password-request',handlePasswordResetRequest)
 authRoutes.patch("/resend-email-verification",handleResendEmailVerification)
-
+authRoutes.post("/reset-password-request",handlePasswordResetRequest)
+authRoutes.post("/reset-password-request/:token",handlePasswordReset)
 // Authorized Routes
 authRoutes.post("/change-password",authMiddleware,handleChangePassword)
 authRoutes.get("/refresh-token",authMiddleware,handleTokenRefresh)

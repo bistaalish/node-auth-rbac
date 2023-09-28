@@ -1,6 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const crypto = require('crypto');
 const User = require('../models/User');
+const PasswordReset = require('../models/PasswordReset');
 const {NotFoundError, UnauthenticatedError, BadRequestError} = require('../errors/index');
 const {sendVerificationEmail,sendResetPasswordEmail} = require('../utils/email');
 const email = require('../utils/email');
@@ -113,17 +114,55 @@ const handleTokenRefresh = async (req,res) => {
 }
 
 // Send Token to the Email
-const handlePasswordResetRequest = (req,res) => {
-    res.status(StatusCodes.OK).json({
-        "message": "Password reset link sent to your email."
-    })    
+const handlePasswordResetRequest = async (req,res) => {
+    // res.status(StatusCodes.OK).json({
+    //     "message": "Password reset link sent to your email."
+    // })
+    const { email } = req.body;
+    // Generate token
+    const user = await User.findOne({email})
+    if(!user){
+        throw new NotFoundError("Email Not found")
+    }
+    const passwordReset = await PasswordReset.findOne({email})
+    const resetToken = await crypto.randomBytes(32).toString('hex')
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    const expires = new Date(Date.now() + 3600000)
+    if(!passwordReset){
+        await PasswordReset.create({
+            email, token: hashedToken, expires
+        })
+        await sendResetPasswordEmail(email,resetToken)
+        return res.status(StatusCodes.OK).json({ msg: 'Password reset Email sent.'}) 
+    }
+    passwordReset.token = resetToken
+    passwordReset.expires = expires
+    await passwordReset.save()
+    await sendResetPasswordEmail(email,resetToken)
+    return res.status(StatusCodes.OK).json({msg: 'Password Reset Email'})
+        
 }
 
 // Handle Password Reset
-const handlePasswordReset = (req,res) => {
-   res.status(StatusCodes.OK).json({
-    "message": "Password reset successful."
-   })
+const handlePasswordReset = async (req,res) => {
+    const {token} = req.params;
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const { newPassword,verifyPassword } = req.body
+    const resetToken = await PasswordReset.findOne({token:hashedToken})
+    if(!resetToken || resetToken.expires < Date.now()){
+        throw new NotFoundError("Invalid or expired token")
+    }
+    if(!newPassword || !verifyPassword ) {
+        throw new NotFoundError("newPassword or verifyPassword are missing")
+    }
+    if(newPassword !== verifyPassword){
+        throw new NotFoundError("newPassword and verifyPassword do not match")
+    }
+    const user = await User.findOne({email:resetToken.email})
+    user.password = newPassword
+    await user.save()
+    await PasswordReset.deleteOne({token:hashedToken})
+    res.status(StatusCodes.OK).json({msg: "Password Reset successful"})
 }
 
 // Get Profile
