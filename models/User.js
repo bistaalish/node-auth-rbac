@@ -39,7 +39,7 @@ var UserSchema = new Schema({
         type: String,
         match: [/^\d{10}$/,"Please provide valid Phone Number"]
       },
-      ProfilePicUrl: {
+      avatar: {
         type: String
       }
 });

@@ -6,6 +6,8 @@ const {NotFoundError, UnauthenticatedError, BadRequestError} = require('../error
 const {sendVerificationEmail,sendResetPasswordEmail} = require('../utils/email');
 const email = require('../utils/email');
 
+
+
 // Handle sign in request.
 const handleLogin = async (req,res) => {
     const {email,password} = req.body
@@ -178,7 +180,7 @@ const handleGetProfile = async  (req,res) => {
         name: user.name,
         email: user.email,
         phone: user.phone,
-        ProfilePicUrl: user.ProfilePicUrl }
+        avatar: user.avatar }
     })   
 }
 
@@ -196,11 +198,30 @@ const handleUpdateProfile = async (req,res) => {
         name: user.name,
         email: user.email,
         phone: user.phone,
-        ProfilePicUrl: user.ProfilePicUrl
+        avatar: user.avatar
         }
     })
 }
 
+const handleUploadProfilePic = async (req,res) => {
+    if(!req.file){
+        throw new NotFoundError("No file uploaded")
+    }
+    const id = req.user.userId
+       // Save the profile picture file path or URL
+       const profilePicPath = process.env.APP_URL +`/public/profile-pics/${req.file.filename}`;
+       console.log(req.file)
+       // Create a new profile picture document with the file path
+       const user = await User.findOneAndUpdate({_id:id},{ avatar: profilePicPath },{
+        new: true,
+        runValidators: true
+       });
+   
+   
+       // Respond with a success message or the saved profile picture ID
+       res.json({ message: 'Profile picture updated', avatar: user.avatar });
+
+}
 
 
 module.exports = {
@@ -213,5 +234,7 @@ module.exports = {
     handleGetProfile,
     handleResendEmailVerification,
     handleChangePassword,
-    handleUpdateProfile
+    handleUpdateProfile,
+    handleUploadProfilePic,
+    
 }

@@ -4,6 +4,8 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/auth');
 const authRoutes = express.Router()
+const uploadMiddleware = require('../middlewares/upload');
+
 const {
     handleRegister,
     handleLogin,
@@ -14,7 +16,8 @@ const {
     handleChangePassword,
     handleTokenRefresh,
     handleGetProfile,
-    handleUpdateProfile
+    handleUpdateProfile,
+    handleUploadProfilePic
 
 
 }  = require('../controllers/auth')
@@ -30,6 +33,7 @@ authRoutes.post("/reset-password-request",handlePasswordResetRequest)
 authRoutes.post("/reset-password-request/:token",handlePasswordReset)
 
 // Authorized Routes
+authRoutes.patch('/change-avatar',authMiddleware,uploadMiddleware.single('file'),handleUploadProfilePic)
 authRoutes.get("/profile",authMiddleware,handleGetProfile)
 authRoutes.patch("/profile",authMiddleware,handleUpdateProfile)
 authRoutes.post("/change-password",authMiddleware,handleChangePassword)
