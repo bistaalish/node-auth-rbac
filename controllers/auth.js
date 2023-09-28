@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const {NotFoundError, UnauthenticatedError, BadRequestError} = require('../errors/index');
 const {sendVerificationEmail,sendResetPasswordEmail} = require('../utils/email');
+const email = require('../utils/email');
 
 // Handle sign in request.
 const handleLogin = async (req,res) => {
@@ -37,7 +38,24 @@ const handleRegister = async (req,res) => {
 }
 
 // Handle Resend Email Verification.
-const handleResendEmailVerification = (req,res) => {
+const handleResendEmailVerification = async (req,res) => {
+    const email = req.body.email
+    const token =  crypto.randomBytes(32).toString('hex')
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const user = await User.findOne({email})
+    if (!user){
+        throw new NotFoundError("Invalid Email Address")
+    }
+    if(user.isVerified){
+        throw new BadRequestError("Email Already Verified")
+    }
+    user = await User.findOneAndUpdate({email},{
+        verificationToken: hashedToken
+    },{
+        new: true
+    })
+    await sendVerificationEmail(email,token)
+
     res.status(StatusCodes.OK).json({
         "message": "Email Verification Sent"
     })

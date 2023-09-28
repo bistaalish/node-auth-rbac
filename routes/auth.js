@@ -22,6 +22,7 @@ authRoutes.post('/register',handleRegister)
 authRoutes.get("/verify/:token",handleEmailVerification)
 authRoutes.post('/reset-password/:token',handlePasswordReset)
 authRoutes.get('/reset-password-request',handlePasswordResetRequest)
+authRoutes.patch("/resend-email-verification",handleResendEmailVerification)
 
 // Authorized Routes
 authRoutes.post("/change-password",authMiddleware,handleChangePassword)
