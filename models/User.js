@@ -53,6 +53,10 @@ var UserSchema = new Schema({
       lockUntil: {
         type: Date
       },
+      roles: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Role',
+      }]
 });
 
 // hash password using bcrypt
