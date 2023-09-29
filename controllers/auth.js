@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const PasswordReset = require('../models/PasswordReset');
 const {NotFoundError, UnauthenticatedError, BadRequestError} = require('../errors/index');
+const MailVerify = require('../models/EmailVerification');
 const {sendVerificationEmail,sendResetPasswordEmail} = require('../utils/email');
 const email = require('../utils/email');
 
@@ -61,6 +62,7 @@ const handleRegister = async (req,res) => {
     const hashedToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
     const user = await User.create({name,email,password,verificationToken:hashedToken})
     console.log(verificationToken)
+    const EmailVerificationCount = await MailVerify.create({email})
     await sendVerificationEmail(email,verificationToken)
     const token = user.createJWT()
     const response = { user: {name: user.getName()}, token }
@@ -80,13 +82,20 @@ const handleResendEmailVerification = async (req,res) => {
     if(user.isVerified){
         throw new BadRequestError("Email Already Verified")
     }
-    user = await User.findOneAndUpdate({email},{
+    await User.findOneAndUpdate({email},{
         verificationToken: hashedToken
     },{
         new: true
     })
+    const mailCount = await MailVerify.findOne({email})
+    const maxMailCount = 3
+    if(mailCount.count >= maxMailCount) {
+        throw new BadRequestError("Maximum Email Verification Sent")
+    }
+    mailCount.count = mailCount.count + 1
+    await mailCount.save()
     await sendVerificationEmail(email,token)
-
+    
     res.status(StatusCodes.OK).json({
         "message": "Email Verification Sent"
     })
@@ -103,6 +112,7 @@ const handleEmailVerification = async (req,res) => {
     if(!user) {
         throw new NotFoundError("Invalid or expired token")
     }
+    await MailVerify.findOneAndDelete({email:user.email})
     res.status(StatusCodes.OK).json({message: "Email Verification True"})
 }
 
