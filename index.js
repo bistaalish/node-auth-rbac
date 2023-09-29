@@ -2,8 +2,7 @@ require('dotenv').config();
 require('express-async-errors');
 const express = require('express');
 const authRoutes = require('./routes/auth');
-const schedule = require('node-schedule');
-const PasswordReset = require('./models/PasswordReset');
+
 
 // extra security packages
 const helmet = require('helmet')

@@ -223,7 +223,9 @@ const handleGetProfile = async  (req,res) => {
         name: user.name,
         email: user.email,
         phone: user.phone,
-        avatar: user.avatar }
+        avatar: user.avatar,
+        roles: user.roles
+     }
     })   
 }
 

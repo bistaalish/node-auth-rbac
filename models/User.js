@@ -66,10 +66,11 @@ UserSchema.pre('save', async function () {
     this.updatedAt= Date.now
   })
 
+
 // Create JSON web token
 UserSchema.methods.createJWT = function () {
     return jwt.sign(
-        {userId: this._id, name: this.name,isVerified: this.isVerified},
+        {userId: this._id, name: this.name,isVerified: this.isVerified,roles:this.roles},
         process.env.SECRET_KEY,{
             expiresIn: process.env.JWT_LIFETIME
         }
