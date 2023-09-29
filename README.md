@@ -3,7 +3,7 @@
 A boilerplate for quickly setting up a Node.js application using Express, Mongoose, and a custom error handling API.
 
 ## Table of Contents
-- [API Routes Documentation](#API Routes Documentation)
+- [API Routes Documentation](#documentation)
 - [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -12,7 +12,7 @@ A boilerplate for quickly setting up a Node.js application using Express, Mongoo
 - [License](#license)
 
 
-## API Routes Documentation
+## Documentation
 
 ### Unauthenticated Routes
 
