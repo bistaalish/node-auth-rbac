@@ -26,11 +26,11 @@ const {
 authRoutes.post("/login",handleLogin)
 authRoutes.post('/register',handleRegister)
 authRoutes.get("/verify/:token",handleEmailVerification)
-authRoutes.post('/reset-password/:token',handlePasswordReset)
-authRoutes.get('/reset-password-request',handlePasswordResetRequest)
+// authRoutes.post('/reset-password/:token',handlePasswordReset)
+// authRoutes.get('/reset-password',handlePasswordResetRequest)
 authRoutes.patch("/resend-email-verification",handleResendEmailVerification)
-authRoutes.post("/reset-password-request",handlePasswordResetRequest)
-authRoutes.post("/reset-password-request/:token",handlePasswordReset)
+authRoutes.post("/reset-password",handlePasswordResetRequest)
+authRoutes.post("/reset-password/:token",handlePasswordReset)
 
 // Authorized Routes
 authRoutes.patch('/change-avatar',authMiddleware,uploadMiddleware.single('file'),handleUploadProfilePic)

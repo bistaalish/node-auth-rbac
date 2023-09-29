@@ -14,7 +14,15 @@ var passwordResetSchema = new Schema({
         expires: {
             type: Date, 
             required:true
+        },
+        count: {
+            type: Number,
+            default: 0
         }
 });
+
+passwordResetSchema.pre('save', async function () {
+    this.count = await this.count + 1
+})
 // Compile model from schema
 module.exports = mongoose.model('PasswordReset', passwordResetSchema );

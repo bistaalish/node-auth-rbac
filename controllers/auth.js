@@ -126,8 +126,11 @@ const handlePasswordResetRequest = async (req,res) => {
         throw new NotFoundError("Email Not found")
     }
     const passwordReset = await PasswordReset.findOne({email})
+    if(passwordReset.count >= 5){
+        throw new BadRequestError("Requested too many times")
+    }
     const resetToken = await crypto.randomBytes(32).toString('hex')
-    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    const hashedToken = await crypto.createHash('sha256').update(resetToken).digest('hex');
     const expires = new Date(Date.now() + 3600000)
     if(!passwordReset){
         await PasswordReset.create({
@@ -136,7 +139,7 @@ const handlePasswordResetRequest = async (req,res) => {
         await sendResetPasswordEmail(email,resetToken)
         return res.status(StatusCodes.OK).json({ message: 'Password reset Email sent.'}) 
     }
-    passwordReset.token = resetToken
+    passwordReset.token = hashedToken
     passwordReset.expires = expires
     await passwordReset.save()
     await sendResetPasswordEmail(email,resetToken)
@@ -147,7 +150,7 @@ const handlePasswordResetRequest = async (req,res) => {
 // Handle Password Reset
 const handlePasswordReset = async (req,res) => {
     const {token} = req.params;
-    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const hashedToken = await crypto.createHash('sha256').update(token).digest('hex');
     const { newPassword,verifyPassword } = req.body
     const resetToken = await PasswordReset.findOne({token:hashedToken})
     if(!resetToken || resetToken.expires < Date.now()){

@@ -2,6 +2,8 @@ require('dotenv').config();
 require('express-async-errors');
 const express = require('express');
 const authRoutes = require('./routes/auth');
+const schedule = require('node-schedule');
+const PasswordReset = require('./models/PasswordReset');
 
 // extra security packages
 const helmet = require('helmet')
@@ -43,6 +45,10 @@ app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 3000;
+schedule.scheduleJob('*/1 * * * *', async () => { 
+  console.log("Deleting password reset requests")
+  await PasswordReset.deleteMany({count: 5})
+})
 
 const start = async () => {
   try {
