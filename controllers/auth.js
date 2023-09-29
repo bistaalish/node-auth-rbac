@@ -59,7 +59,6 @@ const handleLogin = async (req,res) => {
 const handleRegister = async (req,res) => {
     const {name,email,password} = req.body
     const passwordError = validatePassword(password)
-    
     const verificationToken =  crypto.randomBytes(32).toString('hex')
     const hashedToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
     const user = await User.create({name,email,password,verificationToken:hashedToken})
@@ -114,7 +113,7 @@ const handleEmailVerification = async (req,res) => {
     if(!user) {
         throw new NotFoundError("Invalid or expired token")
     }
-    await MailVerify.findOneAndDelete({email:user.email})
+    await MailVerify.deleteOne({email: user.email})
     res.status(StatusCodes.OK).json({message: "Email Verification True"})
 }
 
@@ -128,6 +127,7 @@ const handleChangePassword = async (req,res) =>{
     if (newPassword !== verificationPassword) {
         throw new NotFoundError("newPassword and verificationPassword do not match")
     }
+    const passwordError = validatePassword(newPassword)
     const user = await User.findOne({_id:id})
     const isPasswordCorrect = await user.comparePassword(currentPassword)
     if (!isPasswordCorrect) {
@@ -192,6 +192,7 @@ const handlePasswordReset = async (req,res) => {
     const {token} = req.params;
     const hashedToken = await crypto.createHash('sha256').update(token).digest('hex');
     const { newPassword,verifyPassword } = req.body
+    const passwordError = validatePassword(newPassword)
     const resetToken = await PasswordReset.findOne({token:hashedToken})
     if(!resetToken || resetToken.expires < Date.now()){
         throw new NotFoundError("Invalid or expired token")
