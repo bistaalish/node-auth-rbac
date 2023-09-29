@@ -112,7 +112,7 @@ Before you begin, ensure you have met the following requirements:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/bistaalish/node-auth.git
+git clone https://github.com/bistaalish/node-auth-rbac.git
 ```
 
 2. Change into the project directory:

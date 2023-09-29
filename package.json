@@ -1,7 +1,7 @@
 {
-  "name": "npm-express-boilerplate",
+  "name": "Authentication and Authentication API Microservice with RBAC",
   "version": "1.0.0",
-  "description": "This is a boilerplate for express, mongooose, for building REST API",
+  "description": "This is a node js RBAC (Role Based Access Control) Authentication and Authorization.",
   "main": "index.js",
   "scripts": {
     "test": "mocha",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bistaalish/npm-express-boilerplate.git"
+    "url": "git+https://github.com/bistaalish/node-auth-rbac.git"
   },
   "keywords": [
     "Express",
