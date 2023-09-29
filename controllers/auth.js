@@ -89,7 +89,6 @@ const handleChangePassword = async (req,res) =>{
         throw new NotFoundError("newPassword and verificationPassword do not match")
     }
     const user = await User.findOne({_id:id})
-    console.log(user)
     const isPasswordCorrect = await user.comparePassword(currentPassword)
     if (!isPasswordCorrect) {
         throw new UnauthenticatedError("Invalid Current Password")
@@ -210,7 +209,6 @@ const handleUploadProfilePic = async (req,res) => {
     const id = req.user.userId
        // Save the profile picture file path or URL
        const profilePicPath = process.env.APP_URL +`/public/profile-pics/${req.file.filename}`;
-       console.log(req.file)
        // Create a new profile picture document with the file path
        const user = await User.findOneAndUpdate({_id:id},{ avatar: profilePicPath },{
         new: true,

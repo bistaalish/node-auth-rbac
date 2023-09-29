@@ -12,7 +12,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     CustomError.statusCode = StatusCodes.BAD_REQUEST
   }
   if (err instanceof CustomAPIError) {
-    return res.status(err.statusCode).json({ msg: err.message })
+    return res.status(err.statusCode).json({ message: err.message })
   }
   if(err.code && err.code === 11000 ) {
     CustomError.msg = `Duplicate value entered for ${Object.keys(err.keyValue)} field, please choose another value`
@@ -23,7 +23,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     CustomError.msg = `No item found with id : ${err.value}`
     CustomError.statusCode = StatusCodes.NOT_FOUND
   }
-  return res.status(CustomError.statusCode).json({ msg: CustomError.msg })
+  return res.status(CustomError.statusCode).json({ message: CustomError.msg })
 }
 
 module.exports = errorHandlerMiddleware
