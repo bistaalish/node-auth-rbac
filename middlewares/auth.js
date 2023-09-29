@@ -12,11 +12,11 @@ const authMiddleware = async (req,res,next) => {
         // attach the users to the jov routes
         req.user = {userId: payload.userId, name: payload.name,isVerified:payload.isVerified}
         if(!payload.isVerified){
-            throw new UnauthenticatedError("Email is not verified.")
+            throw new Error("Email is not verified.")
         }
         next()
     } catch (error) {
-        throw new UnauthenticatedError('Authentication Invalid')
+        throw new UnauthenticatedError(error.toString().split(":")[1])
     }
 }
 
