@@ -10,10 +10,33 @@ const helmet = require('helmet')
 const cors = require('cors');
 const xss = require('xss-clean');
 const rateLimiter = require('express-rate-limit')
+const winston = require('winston');
+
+// Create a logger
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(({ timestamp, message }) => {
+      return `[${timestamp}] ${message}`;
+    })
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'app.log' }), // You can customize the log file location
+  ],
+});
+
 
 // ConnectDb
 const connectDB = require('./db/connect');
 const app = express();
+
+// Middleware to log requests
+app.use((req, res, next) => {
+  logger.info(`[${req.method}] ${req.url}`);
+  next();
+});
 
 // error handler
 const notFoundMiddleware = require('./middlewares/not-found');
@@ -45,10 +68,6 @@ app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 3000;
-schedule.scheduleJob('*/1 * * * *', async () => { 
-  console.log("Deleting password reset requests")
-  await PasswordReset.deleteMany({count: 5})
-})
 
 const start = async () => {
   try {

@@ -17,8 +17,18 @@ var passwordResetSchema = new Schema({
         },
         count: {
             type: Number,
-            default: 0
-        }
+            default: 1
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+            
+          },
+          expireAt: {
+            type: Date,
+            default: Date.now() + 24 * 60 * 1000
+          }    
+    
 });
 
 passwordResetSchema.pre('save', async function () {
