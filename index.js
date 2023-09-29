@@ -2,7 +2,12 @@ require('dotenv').config();
 require('express-async-errors');
 const express = require('express');
 const authRoutes = require('./routes/auth');
-const adminRoutes = require('./routes/admin')
+const roleRoute = require('./routes/admin/role')
+// error handler
+const notFoundMiddleware = require('./middlewares/not-found');
+const errorHandlerMiddleware = require('./middlewares/error-handler');
+const authMiddleware = require('./middlewares/auth');
+
 
 // extra security packages
 const helmet = require('helmet')
@@ -33,11 +38,7 @@ const app = express();
 
 
 
-// error handler
-const notFoundMiddleware = require('./middlewares/not-found');
-const errorHandlerMiddleware = require('./middlewares/error-handler');
-const authMiddleware = require('./middlewares/auth');
-const isAdmin = require('./middlewares/isAdmin');
+
 
 app.use('/public',express.static('public'))
 app.set('trust proxy', 1);
@@ -76,7 +77,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth',authRoutes)
-app.use('/api/admin/',authMiddleware,adminRoutes)
+app.use('/api/roles/',authMiddleware,roleRoute)
 
 
 app.use(notFoundMiddleware);

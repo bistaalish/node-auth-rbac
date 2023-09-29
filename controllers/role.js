@@ -6,7 +6,7 @@ const getAllRoles = (req,res) => {
 // Function to get Role by using specific Role ID
 const getRole = (req,res) => {
     const roleID = req.params.id
-    return res.status(200).json({message:`Get all Roles${roleID}`})
+    return res.status(200).json({message:`Get Roles: ${roleID}`})
 }
 // Create A New Role
 const createRole = (req,res) => {
@@ -16,7 +16,7 @@ const createRole = (req,res) => {
 // Update Existing Roles
 const updateRole = (req,res) => {
    const roleID = req.params.id
-   return res.status(200).json({message: `update role: ${roleId}`}) 
+   return res.status(200).json({message: `update role: ${roleID}`}) 
 }
 // Delete Roles
 const deleteRole = (req,res) => {
