@@ -41,6 +41,13 @@ const handleLogin = async (req,res) => {
     }
     
     const token = user.createJWT()
+    await User.updateOne({
+        email
+    },{
+        $set: {
+            loginAttempts: 0
+        }
+    })
   res.status(StatusCodes.OK).json({
     "message" : "Login successful",
     token
