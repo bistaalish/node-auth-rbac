@@ -32,11 +32,7 @@ const logger = winston.createLogger({
 const connectDB = require('./db/connect');
 const app = express();
 
-// Middleware to log requests
-app.use((req, res, next) => {
-  logger.info(`[${req.method}] ${req.url}`);
-  next();
-});
+
 
 // error handler
 const notFoundMiddleware = require('./middlewares/not-found');
@@ -53,7 +49,20 @@ app.use(helmet())
 app.use(cors())
 app.use(xss())
 
+// Middleware to log requests
+app.use((req, res, next) => {
+  const logMessage = `[${req.method}] ${req.url}`;
+  
+  // Log request parameters (req.params) and request body (req.body)
+  if (Object.keys(req.params).length > 0) {
+    logger.info(`${logMessage} - Params: ${JSON.stringify(req.params)}`);
+  }
+  if (Object.keys(req.body).length > 0) {
+    logger.info(`${logMessage} - Body: ${JSON.stringify(req.body)}`);
+  }
 
+  next();
+});
 
 // routes
 app.get('/', (req, res) => {
