@@ -7,6 +7,10 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
     msg: err.message || "Something went wrong"
   }
+  if(err.message ===  "Cannot read properties of undefined (reading '0')"){
+    CustomError.statusCode = StatusCodes.UNAUTHORIZED
+    CustomError.msg = 'Password must be at least 8 characters long and contain at least one letter, one number, and may include special characters like @$!%*#?&.'
+  }
   if(err.name === "ValidationError"){
     CustomError.msg = Object.values(err.errors).map((item)=>item.message).join(',')
     CustomError.statusCode = StatusCodes.BAD_REQUEST
