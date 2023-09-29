@@ -41,7 +41,18 @@ var UserSchema = new Schema({
       },
       avatar: {
         type: String
-      }
+      },
+      loginAttempts: {
+        type: Number,
+        default: 0
+      },
+      isLocked: {
+        type: Boolean,
+        default: false
+      },
+      lockUntil: {
+        type: Date
+      },
 });
 
 // hash password using bcrypt
@@ -69,7 +80,6 @@ UserSchema.methods.getName = function () {
 // Compare password
 UserSchema.methods.comparePassword = async function (pass) {
     const isMatch = await bcrypt.compare(pass,this.password)
-    console.log(isMatch)
     return isMatch
 }
 

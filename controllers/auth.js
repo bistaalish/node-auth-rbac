@@ -15,10 +15,31 @@ const handleLogin = async (req,res) => {
     if(!user) {
         throw new UnauthenticatedError("Invalid Credentials")
     }
+    if (user && user.isLocked){
+        throw new UnauthenticatedError("Account is locked. Please contact support.")
+    }
     const isPasswordCorrect = await user.comparePassword(password)
     if (!isPasswordCorrect) {
+        const maxLoginAttempts = 5;
+        if (user.loginAttempts >= maxLoginAttempts) {
+        await User.updateOne(
+            {email},
+            {
+                $set: {
+                    isLocked: true,
+                    lockUntil: new Date() + 24 * 60 * 60 * 1000,
+                }
+            }
+        )
+        }
+        await User.updateOne({email},{
+            $set: {
+                loginAttempts: user.loginAttempts + 1
+            }
+        })
         throw new UnauthenticatedError("Invalid Credentials")
     }
+    
     const token = user.createJWT()
   res.status(StatusCodes.OK).json({
     "message" : "Login successful",
