@@ -3,7 +3,7 @@
 A boilerplate for quickly setting up a Node.js application using Express, Mongoose, and a custom error handling API.
 
 ## Table of Contents
-- [API Routes Documentation](#API)
+- [API Routes Documentation](#API Routes Documentation)
 - [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -93,6 +93,12 @@ These routes require authentication via an access token obtained during login.
 - Mongoose for MongoDB database interaction.
 - Custom Error Handling middleware for consistent error responses.
 - Basic project structure to kickstart your Node.js project.
+- Password Validation for Strong Password.
+- Change Password.
+- Update Profile.
+- Update Avatar.
+- Email Verification.
+- Reset Password.
 
 ## Prerequisites
 
@@ -105,8 +111,8 @@ Before you begin, ensure you have met the following requirements:
 
 1. Clone the repository:
 
-   ```bash
-   git clone https://github.com/yourusername/express-mongoose-custom-error-api-boilerplate.git
+```bash
+git clone https://github.com/bistaalish/node-auth.git
 ```
 
 2. Change into the project directory:
