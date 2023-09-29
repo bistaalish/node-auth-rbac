@@ -51,8 +51,7 @@ app.use(xss())
 
 // Middleware to log requests
 app.use((req, res, next) => {
-  const logMessage = `[${req.method}] ${req.url}`;
-  
+  const logMessage = `[${req.method}] ${req.url} - IP: ${req.ip}`;  
   // Log request parameters (req.params) and request body (req.body)
   if (Object.keys(req.params).length > 0) {
     logger.info(`${logMessage} - Params: ${JSON.stringify(req.params)}`);
@@ -60,6 +59,12 @@ app.use((req, res, next) => {
   if (Object.keys(req.body).length > 0) {
     logger.info(`${logMessage} - Body: ${JSON.stringify(req.body)}`);
   }
+   // Log the response after the request is handled
+   const oldSend = res.send;
+   res.send = function (data) {
+     logger.info(`${logMessage} - Response: ${JSON.stringify(data)}`);
+     oldSend.apply(res, arguments);
+   };
 
   next();
 });
