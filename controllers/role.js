@@ -10,9 +10,10 @@ const getAllRoles = async (req,res) => {
 }
 
 // Function to get Role by using specific Role ID
-const getRole = (req,res) => {
+const getRole = async (req,res) => {
     const roleID = req.params.id
-    return res.status(200).json({message:`Get Roles: ${roleID}`})
+    const roles = await Role.findOne({_id:roleID})
+    return res.status(200).json({message:`Get Role Successful`,data:roles})
 }
 // Create A New Role
 const createRole = (req,res) => {
