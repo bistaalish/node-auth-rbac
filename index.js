@@ -3,6 +3,7 @@ require('express-async-errors');
 const express = require('express');
 const authRoutes = require('./routes/auth');
 const roleRoute = require('./routes/admin/role')
+const userRoute = require("./routes/admin/user")
 // error handler
 const notFoundMiddleware = require('./middlewares/not-found');
 const errorHandlerMiddleware = require('./middlewares/error-handler');
@@ -78,6 +79,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth',authRoutes)
 app.use('/api/roles/',authMiddleware,roleRoute)
+app.use('/api/users/',authMiddleware,userRoute)
 
 
 app.use(notFoundMiddleware);
