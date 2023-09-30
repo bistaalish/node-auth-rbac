@@ -29,9 +29,10 @@ const updateRole = (req,res) => {
    return res.status(200).json({message: `update role: ${roleID}`}) 
 }
 // Delete Roles
-const deleteRole = (req,res) => {
+const deleteRole = async (req,res) => {
     const roleId = req.params.id
-    return res.status(200).json({message: `delete role: ${roleId}`})
+    await Role.deleteOne({_id:roleId})
+    return res.status(200).json({message: `deleted role: ${roleId}`})
 }
 
 module.exports = {
