@@ -57,8 +57,13 @@ var UserSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Role',
         required: true
-      }]
+      }],
+      isDeleted: {
+        type: Boolean,
+        default: false, // Initially, the document is not deleted
+    },
 });
+
 
 // hash password using bcrypt
 UserSchema.pre('save', async function () {
@@ -86,6 +91,7 @@ UserSchema.methods.getName = function () {
 // Compare password
 UserSchema.methods.comparePassword = async function (pass) {
     const isMatch = await bcrypt.compare(pass,this.password)
+    console.log(isMatch)
     return isMatch
 }
 

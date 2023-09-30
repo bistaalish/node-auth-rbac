@@ -59,9 +59,8 @@ const createUser = async (req , res) => {
         throw new NotFoundError("Invalid Role Name")
     }
     const roleIds = roleObjects.map(role => role._id.toString()); // Convert ObjectIds to strings
-    const user = await  User.create({email,name,password,roleIds})
-    user.roles = roleIds
-    await user.save()
+    const user = await  User.create({email,name,password,roles:roleIds})
+    
     res.status(StatusCodes.CREATED).json({
         message: "success",
         data: user
