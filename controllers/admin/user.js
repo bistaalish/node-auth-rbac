@@ -30,7 +30,10 @@ const getAllUsers = async (req , res) => {
 const getUser = async (req , res) => {
     const userId = req.params.id;
     const userInfo = await User.findOne({_id: userId},{password: 0}).populate('roles','name');
-   // Extract role names from the populated roles
+    if(!userInfo){
+        throw new NotFoundError(`Invalid User ID: ${userId}`)
+    }
+    // Extract role names from the populated roles
     const user = {
         _id: userInfo._id,
         name: userInfo.name,
@@ -68,7 +71,15 @@ const createUser = async (req , res) => {
 }
 
 const deleteUser = async (req , res) => {
-    
+    const userId = req.params.id
+    const user = await User.findOneAndDelete({_id:userId})
+    if(!user){
+        throw new NotFoundError(`Invalid Username ID: ${userId}`)
+    }
+    res.status(StatusCodes.OK).json({
+        message: "success",
+        data: user
+    })
 }
 
 const updateUser = async (req , res) => {
