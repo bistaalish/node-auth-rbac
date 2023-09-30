@@ -91,7 +91,6 @@ UserSchema.methods.getName = function () {
 // Compare password
 UserSchema.methods.comparePassword = async function (pass) {
     const isMatch = await bcrypt.compare(pass,this.password)
-    console.log(isMatch)
     return isMatch
 }
 

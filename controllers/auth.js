@@ -1,6 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const crypto = require('crypto');
 const User = require('../models/User');
+const Role = require('../models/Role');
 const PasswordReset = require('../models/PasswordReset');
 const {NotFoundError, UnauthenticatedError, BadRequestError} = require('../errors/index');
 const MailVerify = require('../models/EmailVerification');
@@ -18,6 +19,9 @@ const handleLogin = async (req,res) => {
     }
     if (user && user.isLocked){
         throw new UnauthenticatedError("Account is locked. Please contact support.")
+    }
+    if (user && user.isDeleted){
+        throw new UnauthenticatedError("Invalid Credentials")
     }
     const isPasswordCorrect = await user.comparePassword(password)
     if (!isPasswordCorrect) {
@@ -59,10 +63,10 @@ const handleLogin = async (req,res) => {
 const handleRegister = async (req,res) => {
     const {name,email,password} = req.body
     const passwordError = validatePassword(password)
+    const userRole = await Role.findOne({ name: 'user' });
     const verificationToken =  crypto.randomBytes(32).toString('hex')
     const hashedToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
-    const user = await User.create({name,email,password,verificationToken:hashedToken})
-    console.log(verificationToken)
+    const user = await User.create({name,email,password,verificationToken:hashedToken,roles:userRole._id})
     const EmailVerificationCount = await MailVerify.create({email})
     await sendVerificationEmail(email,verificationToken)
     const token = user.createJWT()
@@ -142,7 +146,6 @@ const handleChangePassword = async (req,res) =>{
 // Handle token Refresh
 const handleTokenRefresh = async (req,res) => {
     const id = req.user.userId
-    console.log(id)
     const user = await User.findOne({_id:id})
     if(!user){
         throw new NotFoundError("Invalid User")
