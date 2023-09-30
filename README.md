@@ -12,6 +12,7 @@ A boilerplate for quickly setting up a Node.js application using Express, Mongoo
 - [License](#license)
 
 
+
 ## Documentation
 
 ### Unauthenticated Routes
@@ -52,7 +53,7 @@ A boilerplate for quickly setting up a Node.js application using Express, Mongoo
 - **Description**: Reset a user's password using a reset token.
 - **Controller**: `handlePasswordReset`
 
-### Authenticated Routes
+### Profile Management Routes
 These routes require authentication via an access token obtained during login.
 
 #### Upload Profile Picture
@@ -86,6 +87,121 @@ These routes require authentication via an access token obtained during login.
 - **Controller**: `handleTokenRefresh`
 
 
+### Role Routes Management
+
+#### 1. Get All Roles
+
+- **Endpoint:** `GET /`
+- **Description:** Get a list of all user roles in the system.
+- **Request Parameters:** None
+- **Response:**
+  - **Status Code:** 200 (OK)
+  - **Response Body:**
+    ```json
+    [
+      {
+        "_id": "role_id",
+        "name": "Role Name",
+        "description": "Role Description"
+      },
+      // Additional role objects...
+    ]
+    ```
+
+#### 2. Get Role by ID
+
+- **Endpoint:** `GET /:id`
+- **Description:** Get details of a specific user role by its ID.
+- **Request Parameters:**
+  - `id` (String): The ID of the role to retrieve.
+- **Response:**
+  - **Status Code:** 200 (OK)
+  - **Response Body:**
+    ```json
+    {
+      "_id": "role_id",
+      "name": "Role Name",
+      "description": "Role Description"
+    }
+    ```
+
+#### 3. Create New Role
+
+- **Endpoint:** `POST /`
+- **Description:** Create a new user role in the system.
+- **Request Body:**
+  - `name` (String, required): The name of the new role.
+  - `description` (String): A description of the new role (optional).
+- **Response:**
+  - **Status Code:** 201 (Created)
+  - **Response Body:**
+    ```json
+    {
+      "_id": "new_role_id",
+      "name": "New Role Name",
+      "description": "New Role Description"
+    }
+    ```
+
+#### 4. Update Role by ID
+
+- **Endpoint:** `PATCH /:id`
+- **Description:** Update an existing user role by its ID.
+- **Request Parameters:**
+  - `id` (String): The ID of the role to update.
+- **Request Body:**
+  - `name` (String): The updated name of the role (optional).
+  - `description` (String): The updated description of the role (optional).
+- **Response:**
+  - **Status Code:** 200 (OK)
+  - **Response Body:**
+    ```json
+    {
+      "_id": "role_id",
+      "name": "Updated Role Name",
+      "description": "Updated Role Description"
+    }
+    ```
+
+#### 5. Delete Role by ID
+
+- **Endpoint:** `DELETE /:id`
+- **Description:** Delete an existing user role by its ID.
+- **Request Parameters:**
+  - `id` (String): The ID of the role to delete.
+- **Response:**
+  - **Status Code:** 204 (No Content)
+
+### Error Responses
+
+- **Status Code:** 401 (Unauthorized)
+  - **Response Body:**
+    ```json
+    {
+      "error": "Unauthorized",
+      "message": "Only administrators are allowed to access this endpoint."
+    }
+    ```
+- **Status Code:** 404 (Not Found)
+  - **Response Body:**
+    ```json
+    {
+      "error": "Not Found",
+      "message": "Role with ID 'role_id' not found."
+    }
+    ```
+- **Status Code:** 422 (Unprocessable Entity)
+  - **Response Body:**
+    ```json
+    {
+      "error": "Unprocessable Entity",
+      "message": "Validation failed. Please provide a valid name for the role."
+    }
+    ```
+
+---
+
+Please note that this is a basic template for API documentation. You should customize it to match your specific requirements and provide more details as needed, such as examples of request and response payloads, additional error scenarios, and any specific usage instructions.
 
 ## Features
 
@@ -99,6 +215,8 @@ These routes require authentication via an access token obtained during login.
 - Update Avatar.
 - Email Verification.
 - Reset Password.
+- CRUD Operation for Users.
+- CRUD Operation for Roles.
 
 ## Prerequisites
 
