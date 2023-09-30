@@ -6,19 +6,20 @@ const {NotFoundError, UnauthenticatedError, BadRequestError} = require('../error
 const getAllRoles = async (req,res) => {
     const roles = await Role.find({})
     return res.status(StatusCodes.OK).json({message: "All Roles",data:roles})
-    // return res.status(StatusCodes.OK).json({message:"Get all Roles"})
 }
 
 // Function to get Role by using specific Role ID
 const getRole = async (req,res) => {
     const roleID = req.params.id
     const roles = await Role.findOne({_id:roleID})
+    if(!roles){
+        throw new NotFoundError("Invalid Role ID")
+    }
     return res.status(StatusCodes.OK).json({message:`Get Role Successful`,data:roles})
 }
 // Create A New Role
 const createRole = async (req,res) => {
-    const {name,description} = req.body;
-    const role = await Role.create({name,description})
+    const role = await Role.create(req.body)
     return res.status(200).json({message:"Added New Role", data:role})
 }
 
