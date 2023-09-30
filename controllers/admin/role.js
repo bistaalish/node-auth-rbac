@@ -1,6 +1,6 @@
-const Role = require('../models/Role');
+const Role = require('../../models/Role');
 const { StatusCodes } = require('http-status-codes');
-const {NotFoundError, UnauthenticatedError, BadRequestError} = require('../errors/index');
+const {NotFoundError} = require('../../errors');
 
 // Function to get all roles
 const getAllRoles = async (req,res) => {

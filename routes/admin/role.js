@@ -7,7 +7,7 @@ const {
     updateRole,
     deleteRole,
 
-} = require('../../controllers/role');
+} = require('../../controllers/admin/role');
 const router = express.Router();
 
 // Use Admin Middle so that only admins can use this route
