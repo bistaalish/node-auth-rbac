@@ -56,6 +56,7 @@ var UserSchema = new Schema({
       roles: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Role',
+        required: true
       }]
 });
 

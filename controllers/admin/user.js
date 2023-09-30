@@ -2,6 +2,7 @@
 const User = require('../../models/User');
 const { StatusCodes } = require('http-status-codes');
 const {NotFoundError} = require('../../errors');
+const Role = require('../../models/Role');
 
 const getAllUsers = async (req , res) => {
     const usersInfo = await User.find({}).populate('roles', 'name');
@@ -52,7 +53,19 @@ const getUser = async (req , res) => {
 }
 
 const createUser = async (req , res) => {
-    
+    const {email,name,password,roles} = req.body
+    const roleObjects = await Role.find({ name: { $in: roles } }, '_id');
+    if(roleObjects.length === 0){
+        throw new NotFoundError("Invalid Role Name")
+    }
+    const roleIds = roleObjects.map(role => role._id.toString()); // Convert ObjectIds to strings
+    const user = await  User.create({email,name,password,roleIds})
+    user.roles = roleIds
+    await user.save()
+    res.status(StatusCodes.CREATED).json({
+        message: "success",
+        data: user
+    })
 }
 
 const deleteUser = async (req , res) => {
