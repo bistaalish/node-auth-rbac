@@ -20,19 +20,23 @@ const getRole = async (req,res) => {
 // Create A New Role
 const createRole = async (req,res) => {
     const role = await Role.create(req.body)
-    return res.status(200).json({message:"Added New Role", data:role})
+    return res.status(StatusCodes.CREATED).json({message:"Added New Role", data:role})
 }
 
 // Update Existing Roles
-const updateRole = (req,res) => {
+const updateRole = async (req,res) => {
    const roleID = req.params.id
-   return res.status(200).json({message: `update role: ${roleID}`}) 
+   const role = await Role.findOne({_id:roleID},req.body,{
+    new:true, 
+    runValidators: true
+   })
+   return res.status(200).json({message: `update role: ${roleID}`,data:role}) 
 }
 // Delete Roles
 const deleteRole = async (req,res) => {
     const roleId = req.params.id
     await Role.deleteOne({_id:roleId})
-    return res.status(200).json({message: `deleted role: ${roleId}`})
+    return res.status(StatusCodes.OK).json({message: `deleted role: ${roleId}`})
 }
 
 module.exports = {
