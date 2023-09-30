@@ -26,7 +26,7 @@ const createRole = async (req,res) => {
 // Update Existing Roles
 const updateRole = async (req,res) => {
    const roleID = req.params.id
-   const role = await Role.findOne({_id:roleID},req.body,{
+   const role = await Role.findOneAndUpdate({_id:roleID},req.body,{
     new:true, 
     runValidators: true
    })
