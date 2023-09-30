@@ -16,6 +16,7 @@ const getAllUsers = async (req , res) => {
           loginAttempts: user.loginAttempts,
           isLocked: user.isLocked,
           roles: user.roles.map(role => role.name), // Extract role names
+          isDeleted: user.isDeleted,
           createdAt: user.createdAt,
           updatedAt: user.updatedAt,
           __v: user.__v
@@ -44,6 +45,7 @@ const getUser = async (req , res) => {
         roles: userInfo.roles.map(role => role.name),
         createdAt: userInfo.createdAt,
         updatedAt: userInfo.updatedAt,
+        isDeleted: userInfo.isDeleted,
         __v: userInfo.__v
     }
  
@@ -72,18 +74,29 @@ const createUser = async (req , res) => {
 
 const deleteUser = async (req , res) => {
     const userId = req.params.id
-    const user = await User.findOneAndDelete({_id:userId})
+    const user = await User.findOneAndUpdate({_id:userId},{isDeleted: true},{
+        new: true
+    })
     if(!user){
         throw new NotFoundError(`Invalid Username ID: ${userId}`)
     }
+
     res.status(StatusCodes.OK).json({
         message: "success",
-        data: user
+        
     })
 }
 
 const updateUser = async (req , res) => {
-    
+    const userId = req.params.id
+    const user = await User.findOneAndUpdate({_id:userId},req.body,{
+        new: true,
+        runValidators: true
+    })
+    res.status(StatusCodes.OK).json({
+        message: "success",
+        data: user
+    })
 }
 
 const changePassword = async (req , res) => {
