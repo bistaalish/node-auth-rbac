@@ -1,8 +1,9 @@
 
 const User = require('../../models/User');
 const { StatusCodes } = require('http-status-codes');
-const {NotFoundError} = require('../../errors');
+const {NotFoundError,UnauthenticatedError} = require('../../errors');
 const Role = require('../../models/Role');
+const validatePassword = require('../../middlewares/pass-valid');
 
 const getAllUsers = async (req , res) => {
     const usersInfo = await User.find({}).populate('roles', 'name');
@@ -100,6 +101,23 @@ const updateUser = async (req , res) => {
 }
 
 const changePassword = async (req , res) => {
+    const userId = req.params.id
+    const {currentPassword,newPassword,verificationPassword} = req.body
+    if (!currentPassword || !newPassword || !verificationPassword ){
+        throw new NotFoundError("Missing currentPassword or newPassword or verificationPassword")
+    }
+    if (newPassword !== verificationPassword) {
+        throw new NotFoundError("newPassword and verificationPassword do not match")
+    }
+    const passwordError = validatePassword(newPassword)
+    const user = await User.findOne({_id:userId})
+    const isPasswordCorrect = await user.comparePassword(currentPassword)
+    if (!isPasswordCorrect) {
+        throw new UnauthenticatedError("Invalid Current Password")
+    }
+    user.password = newPassword;
+    await user.save()
+    res.status(StatusCodes.CREATED).json({message: "Password Changed Successfully"})
     
 }
 
