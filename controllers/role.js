@@ -1,6 +1,12 @@
+const Role = require('../models/Role');
+const { StatusCodes } = require('http-status-codes');
+const {NotFoundError, UnauthenticatedError, BadRequestError} = require('../errors/index');
+
 // Function to get all roles
-const getAllRoles = (req,res) => {
-    return res.status(200).json({message:"Get all Roles"})
+const getAllRoles = async (req,res) => {
+    const roles = await Role.find({})
+    return res.status(StatusCodes.OK).json({message: "All Roles",data:roles})
+    // return res.status(StatusCodes.OK).json({message:"Get all Roles"})
 }
 
 // Function to get Role by using specific Role ID
