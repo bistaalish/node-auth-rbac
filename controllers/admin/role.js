@@ -12,6 +12,7 @@ const getAllRoles = async (req,res) => {
 const getRole = async (req,res) => {
     const roleID = req.params.id
     const roles = await Role.findOne({_id:roleID})
+    
     if(!roles){
         throw new NotFoundError("Invalid Role ID")
     }

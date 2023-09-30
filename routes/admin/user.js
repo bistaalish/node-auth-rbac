@@ -1,7 +1,7 @@
 const express = require('express');
 const isAdmin = require('../../middlewares/isAdmin'); // Import the "isAdmin" middleware
 const {
-    getAllUsers
+    getAllUsers, getUser
 } = require('../../controllers/admin/user');
 
 const router = express.Router();
@@ -10,5 +10,6 @@ const router = express.Router();
 router.use(isAdmin)
 
 router.route("/").get(getAllUsers)
+router.route("/:id").get(getUser)
 
 module.exports = router

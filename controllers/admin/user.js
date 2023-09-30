@@ -21,19 +21,33 @@ const getAllUsers = async (req , res) => {
         };
       });
     return res.status(StatusCodes.OK).json({
-        message: "Get All Users",
-        users
+        status: "success",
+        data: users
     })
 }
 
 const getUser = async (req , res) => {
     const userId = req.params.id;
-    const user = User.findOne({_id: userId}, { password: 0 })
-    
-    res.status(StatusCodes.OK).json({
-        message: `Get User: ${userId}`,
-        data: user
-    })
+    const userInfo = await User.findOne({_id: userId},{password: 0}).populate('roles','name');
+   // Extract role names from the populated roles
+    const user = {
+        _id: userInfo._id,
+        name: userInfo.name,
+        email: userInfo.email,
+        isVerified: userInfo.isVerified,
+        loginAttempts: userInfo.loginAttempts,
+        isLocked: userInfo.isLocked,
+        roles: userInfo.roles.map(role => role.name),
+        createdAt: userInfo.createdAt,
+        updatedAt: userInfo.updatedAt,
+        __v: userInfo.__v
+    }
+ 
+   // If user is found, send their information as a response
+   res.status(StatusCodes.OK).json({
+     status: "success",
+     data: user,
+   });
 
 }
 
